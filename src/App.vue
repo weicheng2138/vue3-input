@@ -1,7 +1,10 @@
 <script setup lang="ts">
-  import {} from 'module'
+  import { ref } from 'vue'
+  import BasicInput from './components/BasicInput.vue'
+  const form = ref('')
 </script>
 
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
+  <BasicInput v-model="form" placeholder="Please Enter here" type="password" />
+  <h1>{{ form }}</h1>
 </template>
