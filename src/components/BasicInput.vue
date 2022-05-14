@@ -48,6 +48,7 @@
       @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     />
     <section class="absolute inset-y-0 right-3 flex justify-end gap-2">
+      <!-- Slot -->
       <span class="flex items-center">
         <slot></slot>
       </span>

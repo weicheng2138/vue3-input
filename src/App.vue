@@ -1,20 +1,32 @@
 <script setup lang="ts">
   import { ref } from 'vue'
-  import BasicInput from './components/BasicInput.vue'
+  import DropdownInput from './components/DropdownInput.vue'
   import Modal from './components/Modal.vue'
-  import AdjustIconButton from './components/buttons/AdjustIconButton.vue'
+  // import AdjustIconButton from './components/buttons/AdjustIconButton.vue'
 
-  const form = ref('')
+  const selectedData = ref('')
   const isOpen = ref(false)
+  const dropdownData = ref<string[]>(['James Bond', 'M', 'Jinx'])
 </script>
 
 <template>
-  <div class="">
-    <BasicInput v-model="form" placeholder="Please Enter here" type="password">
-      <AdjustIconButton @click="isOpen = true" @keyup.esc="isOpen = false" />
-    </BasicInput>
+  <div class="h-screen">
+    <DropdownInput
+      v-model="selectedData"
+      class="h-[60px] w-[400px]"
+      placeholder="Please Enter here"
+      type="single"
+      :data="dropdownData"
+    >
+    </DropdownInput>
 
-    <h1>{{ form }}</h1>
+    <p>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur,
+      voluptates. Odit quibusdam dignissimos ipsum optio illo alias
+      reprehenderit asperiores iusto, eos voluptas debitis molestiae non
+      praesentium ea doloremque corporis fugiat.
+    </p>
+    <h1 class="text-green-600">{{ selectedData }}</h1>
     <Teleport to="body">
       <Modal
         v-if="isOpen"
