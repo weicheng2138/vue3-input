@@ -3,6 +3,7 @@
   import BasicInput from './components/BasicInput.vue'
   import Modal from './components/Modal.vue'
   import AdjustIconButton from './components/buttons/AdjustIconButton.vue'
+
   const form = ref('')
   const isOpen = ref(false)
 </script>
