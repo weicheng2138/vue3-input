@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import { ref, watch } from 'vue'
+  import { ref, watch, computed } from 'vue'
   import { onClickOutside } from '@vueuse/core'
 
   interface Props {
-    modelValue?: string | number | null
+    modelValue?: string | null
     placeholder: string
     type?: 'single' | 'multiple' | 'search'
     disabled?: boolean
@@ -34,6 +34,7 @@
         isEmpty.value = true
       } else {
         isEmpty.value = false
+        isShowDropdown.value = true
       }
     }
   )
@@ -41,10 +42,27 @@
   const dropdownInput = ref<HTMLElement | null>(null)
   const isShowDropdown = ref(false)
   onClickOutside(dropdownInput, () => (isShowDropdown.value = false))
+  /**
+   * handle selected Item
+   * @param {String} item - Selected Item from dropdown.
+   */
   const handleSelect = (item: string) => {
     isShowDropdown.value = false
     emit('update:modelValue', item)
   }
+
+  /**
+   * Deal with realtime filtering
+   */
+  const filteredPeople = computed(() => {
+    if (props.modelValue) {
+      let lowerCaseOfModelValue = props.modelValue.toLowerCase()
+      return props.data.filter((item) => {
+        return item.toLowerCase().includes(lowerCaseOfModelValue)
+      })
+    }
+    return props.data
+  })
 </script>
 <template>
   <div ref="dropdownInput" class="relative">
@@ -136,19 +154,19 @@
     </section>
 
     <Transition
-      enter-active-class="transition duration-100 ease-out"
-      enter-from-class="transform opacity-0 -translate-y-4"
-      enter-to-class="opacity-100 transform translate-none"
-      leave-active-class="transition duration-100 ease-in"
-      leave-from-class="opacity-100 transform translate-none"
-      leave-to-class="transform opacity-0 -translate-y-4"
+      enter-active-class="duration-100 ease-out"
+      enter-from-class="opacity-0 -translate-y-4"
+      enter-to-class="opacity-100 translate-none"
+      leave-active-class="duration-100 ease-in"
+      leave-from-class="opacity-100 translate-none"
+      leave-to-class="opacity-0 -translate-y-4"
     >
       <section
         v-if="isShowDropdown"
         class="mt-1 flex w-full flex-col rounded-lg bg-gray-200 py-2"
       >
         <button
-          v-for="item in data"
+          v-for="item in filteredPeople"
           :key="item"
           class="flex gap-2 p-2 hover:bg-gray-300"
           @click="handleSelect(item)"
