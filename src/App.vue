@@ -7,27 +7,28 @@
   // const selectedData = ref('')
   const selectedData = ref<string[]>([])
   const isOpen = ref(false)
-  const dropdownData = ref<string[]>(['James Bond', 'M', 'Jinx'])
+  const dropdownData = ref<string[]>([
+    'James Bond',
+    'M',
+    'Jinx',
+    'Keck',
+    'Lora',
+    'Sam',
+  ])
 </script>
 
 <template>
-  <div class="h-screen">
+  <div class="flex h-screen flex-col">
     <DropdownInput
       v-model="selectedData"
       class="h-[60px] w-[400px]"
       placeholder="Please Enter here"
       type="single"
       :data="dropdownData"
-      :max-list-height="100"
+      :max-list-height="20"
     >
     </DropdownInput>
 
-    <p>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur,
-      voluptates. Odit quibusdam dignissimos ipsum optio illo alias
-      reprehenderit asperiores iusto, eos voluptas debitis molestiae non
-      praesentium ea doloremque corporis fugiat.
-    </p>
     <h1 class="text-green-600">{{ selectedData }}</h1>
     <Teleport to="body">
       <Modal

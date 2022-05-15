@@ -1,8 +1,14 @@
 <script setup lang="ts">
   import { ref, watch, computed } from 'vue'
-  import { onClickOutside } from '@vueuse/core'
+  import {
+    onClickOutside,
+    useElementBounding,
+    useWindowSize,
+  } from '@vueuse/core'
+
   import ChevrondownIconButton from './buttons/ChevrondownIconButton.vue'
 
+  // TODO maxListHeight is not really working
   interface Props {
     modelValue?: string | string[] | null
     placeholder: string
@@ -93,7 +99,18 @@
     tailwindClassHead: string,
     variable: string | number
   ): string => {
+    console.log(`${tailwindClassHead}-[${variable}px]`)
     return `${tailwindClassHead}-[${variable}px]`
+  }
+
+  /**
+   * Deal with dropdown out of box problem (below viewport)
+   */
+  const dropList = ref<HTMLElement | null>(null)
+  const { bottom: dropListBottomYAxis } = useElementBounding(dropList)
+  const { height: windowHeight } = useWindowSize()
+  const isBelowWindow = () => {
+    return dropListBottomYAxis.value > windowHeight.value
   }
 </script>
 <template>
@@ -174,17 +191,18 @@
     </section>
 
     <Transition
-      enter-active-class="duration-100 ease-out"
-      enter-from-class="opacity-0 -translate-y-4"
-      enter-to-class="opacity-100 translate-none"
-      leave-active-class="duration-100 ease-in"
-      leave-from-class="opacity-100 translate-none"
-      leave-to-class="opacity-0 -translate-y-4"
+      enter-active-class="duration-200 ease-out"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="duration-300 ease-in"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
     >
       <section
         v-if="isShowDropdown"
-        class="mt-1 flex w-full flex-col overflow-auto rounded-lg bg-gray-200 py-2"
-        :class="getTailwindClassString('max-h', maxListHeight)"
+        ref="dropList"
+        class="absolute my-1 flex max-h-[200px] w-full flex-col overflow-auto rounded-lg bg-gray-200 py-2"
+        :class="isBelowWindow() ? ' bottom-[60px]' : ''"
       >
         <button
           v-for="item in filteredPeople"
