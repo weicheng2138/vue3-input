@@ -4,7 +4,8 @@
   import Modal from './components/Modal.vue'
   // import AdjustIconButton from './components/buttons/AdjustIconButton.vue'
 
-  const selectedData = ref('')
+  // const selectedData = ref('')
+  const selectedData = ref<string[]>([])
   const isOpen = ref(false)
   const dropdownData = ref<string[]>(['James Bond', 'M', 'Jinx'])
 </script>
@@ -17,6 +18,7 @@
       placeholder="Please Enter here"
       type="single"
       :data="dropdownData"
+      :max-list-height="100"
     >
     </DropdownInput>
 

@@ -1,22 +1,25 @@
 <script setup lang="ts">
   import { ref, watch, computed } from 'vue'
   import { onClickOutside } from '@vueuse/core'
+  import ChevrondownIconButton from './buttons/ChevrondownIconButton.vue'
 
   interface Props {
-    modelValue?: string | null
+    modelValue?: string | string[] | null
     placeholder: string
     type?: 'single' | 'multiple' | 'search'
     disabled?: boolean
     data: string[]
+    maxListHeight?: number
   }
 
   const props = withDefaults(defineProps<Props>(), {
     modelValue: '',
     type: 'single',
     disabled: false,
+    maxListHeight: 200,
   })
   const emit = defineEmits<{
-    (e: 'update:modelValue', modelValue: string): void
+    (e: 'update:modelValue', modelValue: string | string[]): void
   }>()
 
   /**
@@ -24,6 +27,10 @@
    */
   const clearInput = () => {
     isEmpty.value = true
+    if (props.type === 'multiple') {
+      selectedArray.value = []
+      emit('update:modelValue', [])
+    }
     emit('update:modelValue', '')
   }
   const isEmpty = ref(true)
@@ -41,28 +48,53 @@
 
   const dropdownInput = ref<HTMLElement | null>(null)
   const isShowDropdown = ref(false)
+  const selectedArray = ref<string[]>([])
   onClickOutside(dropdownInput, () => (isShowDropdown.value = false))
   /**
    * handle selected Item
    * @param {String} item - Selected Item from dropdown.
    */
   const handleSelect = (item: string) => {
-    isShowDropdown.value = false
-    emit('update:modelValue', item)
+    if (props.type === 'multiple') {
+      if (!selectedArray.value.includes(item)) {
+        selectedArray.value.push(item)
+      }
+
+      emit('update:modelValue', selectedArray.value)
+    } else {
+      isShowDropdown.value = false
+      emit('update:modelValue', item)
+    }
   }
 
   /**
    * Deal with realtime filtering
    */
   const filteredPeople = computed(() => {
-    if (props.modelValue) {
+    if (typeof props.modelValue === 'string') {
       let lowerCaseOfModelValue = props.modelValue.toLowerCase()
       return props.data.filter((item) => {
         return item.toLowerCase().includes(lowerCaseOfModelValue)
       })
+    } else if (typeof props.modelValue === 'object') {
+      return props.data
     }
     return props.data
   })
+
+  /**
+   * Return a complete tailwind string for dynamic class
+   * You cannot assemble tailwind class in class tag
+   * @returns  {string} Return completed tailwind class
+   * @param {string} variable that going to be assembled
+   * @param {number | string} variable that going to be assembled
+   */
+  const getTailwindClassString = (
+    tailwindClassHead: string,
+    variable: string | number
+  ): string => {
+    return `${tailwindClassHead}-[${variable}px]`
+  }
 </script>
 <template>
   <div ref="dropdownInput" class="relative">
@@ -133,23 +165,11 @@
         </svg>
 
         <!-- Dropdown Icon -->
-        <button @click="isShowDropdown = !isShowDropdown">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 duration-200"
-            :class="!isShowDropdown ? 'rotate-180' : 'transform-none'"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
+        <ChevrondownIconButton
+          class="duration-200"
+          :class="!isShowDropdown ? 'rotate-180' : 'transform-none'"
+          @click="isShowDropdown = !isShowDropdown"
+        />
       </span>
     </section>
 
@@ -163,7 +183,8 @@
     >
       <section
         v-if="isShowDropdown"
-        class="mt-1 flex w-full flex-col rounded-lg bg-gray-200 py-2"
+        class="mt-1 flex w-full flex-col overflow-auto rounded-lg bg-gray-200 py-2"
+        :class="getTailwindClassString('max-h', maxListHeight)"
       >
         <button
           v-for="item in filteredPeople"
@@ -172,7 +193,20 @@
           @click="handleSelect(item)"
         >
           <svg
-            v-if="modelValue === item"
+            v-if="!Array.isArray(modelValue) && modelValue === item"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-orange-500"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <svg
+            v-else-if="Array.isArray(modelValue) && modelValue.includes(item)"
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 text-orange-500"
             viewBox="0 0 20 20"
