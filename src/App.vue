@@ -18,7 +18,8 @@
 </script>
 
 <template>
-  <div class="flex h-screen flex-col">
+  <div class="flex h-screen flex-col items-center justify-center">
+    <h1 class="text-green-600">{{ selectedData }}</h1>
     <DropdownInput
       v-model="selectedData"
       class="h-[60px] w-[400px]"
@@ -29,7 +30,6 @@
     >
     </DropdownInput>
 
-    <h1 class="text-green-600">{{ selectedData }}</h1>
     <Teleport to="body">
       <Modal
         v-if="isOpen"
