@@ -14,7 +14,7 @@
     placeholder: string
     type?: 'single' | 'multiple' | 'search'
     disabled?: boolean
-    data: string[]
+    options: string[]
     maxListHeight?: number
   }
 
@@ -64,6 +64,11 @@
     if (props.type === 'multiple') {
       if (!selectedArray.value.includes(item)) {
         selectedArray.value.push(item)
+      } else {
+        const index = selectedArray.value.indexOf(item)
+        if (index > -1) {
+          selectedArray.value.splice(index, 1) // 2nd parameter means remove one item only
+        }
       }
 
       emit('update:modelValue', selectedArray.value)
@@ -76,16 +81,14 @@
   /**
    * Deal with realtime filtering
    */
-  const filteredPeople = computed(() => {
-    if (typeof props.modelValue === 'string') {
+  const filteredOptions = computed(() => {
+    if (props.type !== 'multiple' && typeof props.modelValue === 'string') {
       let lowerCaseOfModelValue = props.modelValue.toLowerCase()
-      return props.data.filter((item) => {
+      return props.options.filter((item) => {
         return item.toLowerCase().includes(lowerCaseOfModelValue)
       })
-    } else if (typeof props.modelValue === 'object') {
-      return props.data
     }
-    return props.data
+    return props.options
   })
 
   /**
@@ -95,13 +98,13 @@
    * @param {string} variable that going to be assembled
    * @param {number | string} variable that going to be assembled
    */
-  const getTailwindClassString = (
-    tailwindClassHead: string,
-    variable: string | number
-  ): string => {
-    console.log(`${tailwindClassHead}-[${variable}px]`)
-    return `${tailwindClassHead}-[${variable}px]`
-  }
+  // const getTailwindClassString = (
+  //   tailwindClassHead: string,
+  //   variable: string | number
+  // ): string => {
+  //   console.log(`${tailwindClassHead}-[${variable}px]`)
+  //   return `${tailwindClassHead}-[${variable}px]`
+  // }
 
   /**
    * Deal with dropdown out of box problem (below viewport)
@@ -205,15 +208,18 @@
         :class="isBelowWindow() ? ' bottom-[60px]' : ''"
       >
         <button
-          v-for="item in filteredPeople"
+          v-for="item in filteredOptions"
           :key="item"
           class="flex gap-2 p-2 hover:bg-gray-300"
           @click="handleSelect(item)"
         >
           <svg
-            v-if="!Array.isArray(modelValue) && modelValue === item"
+            v-if="!Array.isArray(modelValue)"
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-orange-500"
+            class="h-5 w-5"
+            :class="
+              modelValue === item ? 'text-orange-500' : 'text-transparent'
+            "
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -224,9 +230,12 @@
             />
           </svg>
           <svg
-            v-else-if="Array.isArray(modelValue) && modelValue.includes(item)"
+            v-if="Array.isArray(modelValue)"
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-orange-500"
+            class="h-5 w-5"
+            :class="
+              modelValue.includes(item) ? 'text-blue-500' : 'text-transparent'
+            "
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -236,7 +245,7 @@
               clip-rule="evenodd"
             />
           </svg>
-          <p :class="modelValue === item ? '' : 'pl-7'">{{ item }}</p>
+          <p>{{ item }}</p>
         </button>
       </section>
     </Transition>

@@ -2,14 +2,13 @@
   import { ref, watch } from 'vue'
 
   interface Props {
-    modelValue?: string | number | null
+    modelValue: string | number | null
     placeholder: string
     type?: 'text' | 'password' | 'email' | 'number'
     disabled?: boolean
   }
 
   const props = withDefaults(defineProps<Props>(), {
-    modelValue: '',
     type: 'text',
     disabled: false,
   })

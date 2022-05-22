@@ -24,7 +24,7 @@
       class="h-[60px] w-[400px]"
       placeholder="Please Enter here"
       type="single"
-      :data="dropdownData"
+      :options="dropdownData"
       :max-list-height="20"
     >
     </DropdownInput>
