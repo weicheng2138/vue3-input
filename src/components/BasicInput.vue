@@ -39,6 +39,7 @@
 <template>
   <div class="relative">
     <input
+      data-test="input"
       class="w-full appearance-none rounded-lg bg-gray-200 p-3 text-sm"
       :value="modelValue"
       :type="!toggleShowPassword ? type : 'text'"
@@ -53,6 +54,7 @@
       </span>
       <!-- Input Clear Icon -->
       <span
+        data-test="clear-icon"
         class="flex items-center text-sm leading-5"
         :class="isEmpty || type === 'password' ? 'hidden' : ''"
         @click="clearInput"
@@ -74,10 +76,12 @@
       </span>
       <!-- Password Toggle Icon -->
       <span
+        data-test="password-toggle-icon"
         class="flex items-center text-sm leading-5"
         :class="isEmpty || type !== 'password' ? ' hidden' : ''"
       >
         <svg
+          data-test="password-close-icon"
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-6"
           :class="{
@@ -97,6 +101,7 @@
           />
         </svg>
         <svg
+          data-test="password-open-icon"
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-6"
           :class="{
