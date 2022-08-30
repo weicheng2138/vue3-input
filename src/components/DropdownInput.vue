@@ -119,6 +119,7 @@
 <template>
   <div ref="dropdownInput" class="relative">
     <input
+      data-test="input"
       class="h-full w-full appearance-none rounded-lg bg-gray-200 p-2 text-sm"
       :value="modelValue"
       :type="type"
@@ -130,6 +131,7 @@
     <section class="absolute inset-y-0 right-3 flex justify-end gap-2">
       <!-- Input Clear Icon -->
       <span
+        data-test="clear-icon"
         class="flex items-center text-sm leading-5"
         :class="isEmpty ? 'hidden' : ''"
         @click="clearInput"
@@ -153,6 +155,7 @@
         <!-- Search Icon -->
         <svg
           v-if="type === 'search'"
+          data-test="search-icon"
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-6 text-gray-500"
           fill="none"
@@ -170,6 +173,7 @@
         <!-- Multiple Icon -->
         <svg
           v-if="type === 'multiple'"
+          data-test="multiple-icon"
           xmlns="http://www.w3.org/2000/svg"
           enable-background="new 0 0 24 24"
           class="h-6 w-6 text-gray-500"
@@ -204,6 +208,7 @@
       <section
         v-if="isShowDropdown"
         ref="dropList"
+        data-test="drop-list"
         class="absolute my-1 flex max-h-[200px] w-full flex-col overflow-auto rounded-lg bg-gray-200 py-2"
         :class="isBelowWindow() ? ' bottom-[60px]' : ''"
       >
