@@ -7,7 +7,12 @@ import { describe, it, expect } from 'vitest'
 
 describe.concurrent('BasicInput Default', () => {
   it('should render by default', () => {
-    const wrapper = mount(BasicInput)
+    const wrapper = mount(BasicInput, {
+      props: {
+        modelValue: '',
+        placeholder: '',
+      },
+    })
     expect(wrapper.exists()).toBe(true)
     expect(wrapper.find('[data-test="input"]').exists()).toBeTruthy()
     expect(wrapper.find('[data-test="clear-icon"]').exists()).toBeTruthy()
@@ -29,6 +34,10 @@ describe.concurrent('BasicInput Slots', () => {
       template: '<div data-test="slot">Foo</div>',
     }
     const wrapper = mount(BasicInput, {
+      props: {
+        modelValue: '',
+        placeholder: '',
+      },
       slots: {
         default: Foo,
       },
@@ -44,6 +53,7 @@ describe.concurrent('BasicInput Props', () => {
     const wrapper = mount(BasicInput, {
       props: {
         modelValue: 'Hello world',
+        placeholder: '',
       },
     })
     const input = wrapper.find('[data-test="input"]')
@@ -51,7 +61,12 @@ describe.concurrent('BasicInput Props', () => {
   })
 
   it('should render placeholder', () => {
-    const wrapper = mount(BasicInput, { props: { placeholder: 'Hello world' } })
+    const wrapper = mount(BasicInput, {
+      props: {
+        placeholder: 'Hello world',
+        modelValue: '',
+      },
+    })
     expect(wrapper.find('[data-test="input"]').attributes().placeholder).toBe(
       'Hello world'
     )
@@ -61,6 +76,8 @@ describe.concurrent('BasicInput Props', () => {
     const wrapper = mount(BasicInput, {
       props: {
         type: 'password',
+        modelValue: '',
+        placeholder: '',
       },
     })
     const input = wrapper.find('[data-test="input"]')
@@ -71,6 +88,8 @@ describe.concurrent('BasicInput Props', () => {
     const wrapper = mount(BasicInput, {
       props: {
         disabled: true,
+        modelValue: '',
+        placeholder: '',
       },
     })
     const input = wrapper.find('[data-test="input"]')
@@ -83,6 +102,7 @@ describe.concurrent('BasicInput Actions', () => {
     const wrapper = mount(BasicInput, {
       props: {
         modelValue: '',
+        placeholder: '',
       },
     })
     const clearIcon = wrapper.find('[data-test="clear-icon"]')
@@ -95,8 +115,9 @@ describe.concurrent('BasicInput Actions', () => {
   it('should show password-toggle-icon after having some inputs from props', async () => {
     const wrapper = mount(BasicInput, {
       props: {
-        modelValue: '',
         type: 'password',
+        modelValue: '',
+        placeholder: '',
       },
     })
     const passwordToggleIcon = wrapper.find(
@@ -112,6 +133,7 @@ describe.concurrent('BasicInput Actions', () => {
     const wrapper = mount(BasicInput, {
       props: {
         modelValue: 'bar',
+        placeholder: '',
       },
     })
     const clearIcon = wrapper.get('[data-test="clear-icon"]')
@@ -121,11 +143,12 @@ describe.concurrent('BasicInput Actions', () => {
     expect((wrapper.emitted('update:modelValue') as any[])[0]).toEqual([''])
   })
 
-  it('should change type of input and show open icon after clicking password toggle icon', async () => {
+  it('should change type of input and show open-icon after clicking password toggle icon', async () => {
     const wrapper = mount(BasicInput, {
       props: {
-        modelValue: 'bar',
         type: 'password',
+        modelValue: 'bar',
+        placeholder: '',
       },
     })
     expect(

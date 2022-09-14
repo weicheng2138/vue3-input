@@ -7,7 +7,12 @@ import { describe, it, expect } from 'vitest'
 
 describe.concurrent('DropdownInput Default', () => {
   it('should render by default', () => {
-    const wrapper = mount(DropdownInput)
+    const wrapper = mount(DropdownInput, {
+      props: {
+        placeholder: '',
+        options: [''],
+      },
+    })
     expect(wrapper.exists()).toBe(true)
     expect(wrapper.find('[data-test="input"]').exists()).toBeTruthy()
     expect(wrapper.find('[data-test="clear-icon"]').exists()).toBeTruthy()
@@ -28,6 +33,8 @@ describe.concurrent('DropdownInput Props', () => {
     const wrapper = mount(DropdownInput, {
       props: {
         modelValue: 'Hello world',
+        placeholder: '',
+        options: [''],
       },
     })
     const input = wrapper.find('[data-test="input"]')
@@ -36,7 +43,10 @@ describe.concurrent('DropdownInput Props', () => {
 
   it('should render placeholder', () => {
     const wrapper = mount(DropdownInput, {
-      props: { placeholder: 'Hello world' },
+      props: {
+        placeholder: 'Hello world',
+        options: [''],
+      },
     })
     expect(wrapper.find('[data-test="input"]').attributes().placeholder).toBe(
       'Hello world'
@@ -47,6 +57,8 @@ describe.concurrent('DropdownInput Props', () => {
     const wrapper = mount(DropdownInput, {
       props: {
         type: 'multiple',
+        placeholder: '',
+        options: [''],
       },
     })
     const input = wrapper.find('[data-test="input"]')
@@ -57,6 +69,8 @@ describe.concurrent('DropdownInput Props', () => {
     const wrapper = mount(DropdownInput, {
       props: {
         disabled: true,
+        placeholder: '',
+        options: [''],
       },
     })
     const input = wrapper.find('[data-test="input"]')
@@ -67,6 +81,7 @@ describe.concurrent('DropdownInput Props', () => {
     const wrapper = mount(DropdownInput, {
       props: {
         options: ['bar', 'foo'],
+        placeholder: '',
       },
     })
     expect(wrapper.props().options).toEqual(['bar', 'foo'])
@@ -76,6 +91,8 @@ describe.concurrent('DropdownInput Props', () => {
     const wrapper = mount(DropdownInput, {
       props: {
         maxListHeight: 500,
+        placeholder: '',
+        options: [''],
       },
     })
     expect(wrapper.props().maxListHeight).toEqual(500)
@@ -85,6 +102,8 @@ describe.concurrent('DropdownInput Props', () => {
     const wrapper = mount(DropdownInput, {
       props: {
         type: 'multiple',
+        placeholder: '',
+        options: [''],
       },
     })
     const multipleIcon = wrapper.find('[data-test="multiple-icon"]')
@@ -95,6 +114,8 @@ describe.concurrent('DropdownInput Props', () => {
     const wrapper = mount(DropdownInput, {
       props: {
         type: 'search',
+        placeholder: '',
+        options: [''],
       },
     })
     const searchIcon = wrapper.find('[data-test="search-icon"]')
@@ -106,8 +127,8 @@ describe.concurrent('DropdownInput Actions', () => {
   it('should show clear-icon after having some inputs from props', async () => {
     const wrapper = mount(DropdownInput, {
       props: {
-        modelValue: '',
         options: ['bar', 'foo'],
+        placeholder: '',
       },
     })
     const clearIcon = wrapper.find('[data-test="clear-icon"]')
@@ -121,6 +142,8 @@ describe.concurrent('DropdownInput Actions', () => {
     const wrapper = mount(DropdownInput, {
       props: {
         modelValue: 'bar',
+        placeholder: '',
+        options: [''],
       },
     })
     const clearIcon = wrapper.get('[data-test="clear-icon"]')
@@ -134,6 +157,7 @@ describe.concurrent('DropdownInput Actions', () => {
     const wrapper = mount(DropdownInput, {
       props: {
         options: ['bar', 'foo'],
+        placeholder: '',
       },
     })
     expect(wrapper.find('[data-test="drop-list"]').exists()).toBeFalsy()
@@ -150,6 +174,7 @@ describe.concurrent('DropdownInput Actions', () => {
     const wrapper = mount(DropdownInput, {
       props: {
         options: ['bar', 'foo'],
+        placeholder: '',
       },
     })
     await wrapper.setProps({ modelValue: 'f' })
@@ -162,6 +187,7 @@ describe.concurrent('DropdownInput Actions', () => {
     const wrapper = mount(DropdownInput, {
       props: {
         options: ['bar', 'foo'],
+        placeholder: '',
       },
     })
     const ChevrondownIconButton = wrapper.findComponent({
@@ -178,6 +204,7 @@ describe.concurrent('DropdownInput Actions', () => {
     const wrapper = mount(DropdownInput, {
       props: {
         options: ['bar', 'foo'],
+        placeholder: '',
       },
     })
     const ChevrondownIconButton = wrapper.findComponent({
@@ -198,6 +225,7 @@ describe.concurrent('DropdownInput Actions', () => {
       props: {
         options: ['bar', 'foo'],
         type: 'multiple',
+        placeholder: '',
       },
     })
     const ChevrondownIconButton = wrapper.findComponent({
